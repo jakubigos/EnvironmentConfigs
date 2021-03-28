@@ -1,3 +1,6 @@
+#usage: Redis.Install.sh #Password# #masterIP# #masterPort#
+# masterIP and masterPort for slaves only
+
 yum update -y
 yum install epel-release yum-utils -y
 yum install remi-release-7.rpm -y
@@ -84,13 +87,11 @@ masterauth $1
 
 END
 
-
-if [ $2 = "slave" ] ; then
-cat >> config << END
-replicaof $3 $4
+if [ -n "$2" ]; then
+cat >> /etc/redis.conf << END
+replicaof $2 $3
 
 END
 
-fi
 
 systemctl restart redis
